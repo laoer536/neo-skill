@@ -1,0 +1,13 @@
+- In the `SKILL.md`, emphasize React 18+ with Functional Components and Hooks.
+- Prefer TypeScript for all React code.
+- Use React Server Components (RSC) when applicable, especially in Next.js projects.
+- Avoid Class Components unless working with legacy code.
+- When generating skills from React documentation:
+  - Focus on Hooks (`useState`, `useEffect`, `useContext`, `useMemo`, `useCallback`, etc.)
+  - Cover Context API for state management
+  - Include Suspense and Error Boundaries
+  - Explain component composition patterns
+- For form handling, prefer controlled components or libraries like React Hook Form.
+- For data fetching, mention React Query or Server Components approach.
+- Keep examples concise and practical, avoid overly complex patterns.
+- Follow the principle of "lifting state up" when components need shared state.

@@ -1,0 +1,15 @@
+- In the `SKILL.md`, emphasize Next.js 14+ with App Router (not Pages Router).
+- Prefer Server Components by default, use `'use client'` only when needed (interactivity, hooks, browser APIs).
+- Use Server Actions for form mutations instead of API routes where possible.
+- Follow the file-based routing convention in the `app/` directory.
+- When generating skills from Next.js documentation:
+  - Focus on App Router patterns (`layout.tsx`, `page.tsx`, `loading.tsx`, `error.tsx`)
+  - Cover data fetching with Server Components
+  - Explain Server Actions for mutations
+  - Include routing patterns (dynamic routes, catch-all routes, parallel routes)
+  - Cover metadata API for SEO
+- For styling, prefer Tailwind CSS (already configured in Next.js by default).
+- Mention Image Optimization with `<Image>` component.
+- For authentication, suggest NextAuth.js or similar solutions.
+- Keep examples practical and focused on common use cases.
+- Distinguish clearly between Server and Client component capabilities.

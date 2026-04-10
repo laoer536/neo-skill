@@ -1,0 +1,8 @@
+- In the `SKILL.md`, mention that Tailwind CSS v4 uses CSS-first configuration with `@theme` directive instead of `tailwind.config.js`.
+- For new projects, always use Tailwind CSS v4 with utility-first approach.
+- For existing projects using UnoCSS or other CSS frameworks, respect the existing setup and don't force migration.
+- Prefer utility classes over custom CSS, use `@apply` sparingly only for repeated patterns.
+- Check if the project has a `styles.css` or similar entry point with `@import "tailwindcss"` to understand the theme configuration.
+- If no Tailwind setup is found, suggest the basic v4 setup: `@import "tailwindcss";` in the main CSS file.
+- For dark mode, use the `class` strategy and provide toggle functionality.
+- Always use mobile-first responsive design with breakpoint prefixes (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`).
