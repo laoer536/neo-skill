@@ -270,7 +270,7 @@ const getUser = (id: any): any => {
 
 - **Always use Composition API** with `<script setup lang="ts">`
 - **Use `defineProps` / `defineEmits`** for props and emits — access via `props.xxx` and `emit('event')`
-  - 这是 Vue 语法层面的规范，与 React 的函数参数解构规则完全不同，不存在冲突
+  - This is Vue syntax-level convention, completely different from React's function parameter destructuring rules — no conflict exists
 - **Use `shallowRef` over `ref`** when you don't need deep reactivity (better performance for large objects/arrays)
 - **`readonly` on composable return values** is optional defensive practice — wrap state when you want to prevent accidental mutation by consumers
 - **Pinia stores**: Use `use` prefix — `useUserStore.ts` (same as composables), store files colocate with features when using feature-based organization
@@ -506,7 +506,7 @@ export function useCounter(options: UseCounterOptions = {}) {
 
 **Rule 1: NEVER destructure in parameter list**
 
-> ⚠️ **适用范围**：React 组件、hooks、utility 函数。**不适用于 Vue `<script setup>` 组件**（使用 `defineProps()` / `defineEmits()` 宏）。Vue 项目中的 composables 和普通函数仍适用此规则。
+> ⚠️ **Scope**: React components, hooks, utility functions. **Not applicable to Vue `<script setup>` components** (uses `defineProps()` / `defineEmits()` macros). Vue composables and regular functions still apply this rule.
 
 Always accept the full object as a parameter, then destructure in the function body. **This applies to ALL function types:**
 - Component functions (React/Vue)
@@ -562,7 +562,7 @@ When destructuring parameters, it MUST be the first statement in the function bo
 - Event handlers
 - Any function that accepts object parameters
 
-> ⚠️ **不适用于 Vue `<script setup>` 组件**：`defineProps()` / `defineEmits()` 是 Vue 编译器宏。Vue 项目中的 composables 和普通函数仍适用此规则。
+> ⚠️ **Not applicable to Vue `<script setup>` components**: `defineProps()` / `defineEmits()` are Vue compiler macros. Vue composables and regular functions still apply this rule.
 
 ```ts
 // ✅ CORRECT - Destructuring is the FIRST statement
@@ -634,7 +634,7 @@ export function useAuth(options: UseAuthOptions = {}) {
 
 **This is a mandatory rule for function types** - React components, hooks, and utility functions.
 
-> ⚠️ **不适用于 Vue `<script setup>` 组件**：使用 `defineProps()` / `defineEmits()` 宏。**Vue 项目中的 composables 和普通函数仍适用此规则。**
+> ⚠️ **Not applicable to Vue `<script setup>` components**: Uses `defineProps()` / `defineEmits()` macros. **Vue composables and regular functions still apply this rule.**
 
 **Never use positional parameters.** Always use a single object parameter with a separately declared type. **The function should have only ONE parameter (the options object), keeping the parameter list singular.**
 
