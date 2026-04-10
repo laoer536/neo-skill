@@ -151,7 +151,7 @@ This skill set covers **both Vue and React ecosystems**:
 
 ### TypeScript (Neo-specific rules)
 
-- **Explicit return types**: Declare return types explicitly when possible
+- **Function return types**: NOT mandatory for any function type (hooks, regular functions, or function components) — only declare when necessary (e.g., type inference fails, complex logic, or public API clarity)
 - **Object parameters always**: Never use positional parameters — always accept an object and destructure. Adding a positional param is a breaking change; adding an optional object field is not
 - **Parameter type naming**: `XxxProps` for components, `UseXxxOptions` for hooks/composables, `XxxOptions` for utility functions, `XxxData`/`XxxInput` for required data transfer objects. `Params` is reserved for route params only
 

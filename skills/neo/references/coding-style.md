@@ -218,12 +218,12 @@ function formatCount(count: number): string {
 - **Type vs Interface**: 
   - Use `interface` for object shapes (extensible)
   - Use `type` for unions, intersections, tuples, mapped types
-- **Explicit return types**: For functions, especially exports
+- **Function return types**: NOT mandatory for any function type (hooks, regular functions, or function components) — only declare when necessary (e.g., type inference fails, complex logic, or public API clarity)
 - **Avoid `any`**: Use `unknown` if type is truly unknown
 - **Generics**: Prefer explicit generic constraints
 
 ```ts
-// ✅ Good
+// ✅ Good - Return type can be omitted (TypeScript infers it)
 interface User {
   id: string
   name: string
@@ -232,8 +232,28 @@ interface User {
 
 type Status = 'pending' | 'success' | 'error'
 
-function getUser<T extends User>(id: string): T {
-  // ...
+// Component - return type optional
+export function UserCard(props: UserCardProps) {
+  const { user, onDelete } = props
+  return <div>{user.name}</div>
+}
+
+// Hook - return type optional
+export function useAuth(options: UseAuthOptions = {}) {
+  const { redirectUrl = '/dashboard' } = options
+  const [user, setUser] = useState<User | null>(null)
+  return { user, setUser }
+}
+
+// Regular function - return type optional
+function formatDate(date: Date, options: FormatDateOptions = {}) {
+  const { locale = 'en' } = options
+  return new Intl.DateTimeFormat(locale).format(date)
+}
+
+// ✅ When return type IS necessary - complex logic or public API
+function transformData<T, R>(data: T[], transformer: (item: T) => R): R[] {
+  return data.map(transformer)
 }
 
 // ❌ Bad
@@ -249,7 +269,8 @@ const getUser = (id: any): any => {
 > See [`vue` skill](skills/vue/SKILL.md) for full details.
 
 - **Always use Composition API** with `<script setup lang="ts">`
-- **Avoid Reactive Props Destructuring**: `const { title } = defineProps<...>()` breaks reactivity — always access via `props.title`
+- **Use `defineProps` / `defineEmits`** for props and emits — access via `props.xxx` and `emit('event')`
+  - 这是 Vue 语法层面的规范，与 React 的函数参数解构规则完全不同，不存在冲突
 - **Use `shallowRef` over `ref`** when you don't need deep reactivity (better performance for large objects/arrays)
 - **`readonly` on composable return values** is optional defensive practice — wrap state when you want to prevent accidental mutation by consumers
 - **Pinia stores**: Use `use` prefix — `useUserStore.ts` (same as composables), store files colocate with features when using feature-based organization
@@ -481,6 +502,123 @@ export function useCounter(options: UseCounterOptions = {}) {
 
 **All functions should use object parameters and destructure in the function body.**
 
+#### ⚠️ Mandatory Rules
+
+**Rule 1: NEVER destructure in parameter list**
+
+> ⚠️ **适用范围**：React 组件、hooks、utility 函数。**不适用于 Vue `<script setup>` 组件**（使用 `defineProps()` / `defineEmits()` 宏）。Vue 项目中的 composables 和普通函数仍适用此规则。
+
+Always accept the full object as a parameter, then destructure in the function body. **This applies to ALL function types:**
+- Component functions (React/Vue)
+- Hook / Composable functions
+- Utility functions
+- Event handlers
+- Any function that accepts object parameters
+
+```ts
+// ✅ CORRECT - Components: Accept full object, destructure in body
+export function Button(props: ButtonProps) {
+  const { variant, size, onClick, children } = props  // ← Destructure here
+  return <button onClick={onClick}>{children}</button>
+}
+
+// ✅ CORRECT - Hooks: Accept full object, destructure in body
+export function useAuth(options: UseAuthOptions = {}) {
+  const { redirectUrl = '/dashboard', onLogin } = options  // ← Destructure here
+  // hook implementation
+}
+
+// ✅ CORRECT - Utility functions: Accept full object, destructure in body
+export function formatDate(date: Date, options: FormatDateOptions = {}) {
+  const { locale = 'en', format = 'YYYY-MM-DD' } = options  // ← Destructure here
+  // function implementation
+}
+
+// ❌ FORBIDDEN - Components: Destructuring in parameter list
+export function Button({ variant, size, onClick, children }: ButtonProps) {
+  // This pattern is NOT allowed for components
+  return <button onClick={onClick}>{children}</button>
+}
+
+// ❌ FORBIDDEN - Hooks: Destructuring in parameter list
+export function useAuth({ redirectUrl, onLogin }: UseAuthOptions) {
+  // This pattern is NOT allowed for hooks
+  // hook implementation
+}
+
+// ❌ FORBIDDEN - Utility functions: Destructuring in parameter list
+export function formatDate(date: Date, { locale, format }: FormatDateOptions) {
+  // This pattern is NOT allowed for utility functions
+  // function implementation
+}
+```
+
+**Rule 2: Destructuring MUST be the first statement**
+
+When destructuring parameters, it MUST be the first statement in the function body. This applies to:
+- React component functions
+- Hook / Composable functions
+- Utility functions
+- Event handlers
+- Any function that accepts object parameters
+
+> ⚠️ **不适用于 Vue `<script setup>` 组件**：`defineProps()` / `defineEmits()` 是 Vue 编译器宏。Vue 项目中的 composables 和普通函数仍适用此规则。
+
+```ts
+// ✅ CORRECT - Destructuring is the FIRST statement
+export function Button(props: ButtonProps) {
+  const { variant, size, onClick, children } = props  // ← First line
+  
+  // Other logic after
+  const handleClick = useCallback(() => {
+    onClick?.()
+  }, [onClick])
+  
+  return <button onClick={handleClick}>{children}</button>
+}
+
+// ✅ CORRECT - Hooks follow the same rule
+export function useAuth(options: UseAuthOptions = {}) {
+  const { redirectUrl = '/dashboard', onLogin } = options  // ← First line
+  
+  // State and logic after
+  const [user, setUser] = useState(null)
+  // ...
+}
+
+// ✅ CORRECT - Utility functions too
+export function formatDate(date: Date, options: FormatDateOptions = {}) {
+  const { locale = 'en', format = 'YYYY-MM-DD' } = options  // ← First line
+  
+  // Implementation after
+  return new Intl.DateTimeFormat(locale).format(date)
+}
+
+// ❌ WRONG - Destructuring is NOT first
+export function Button(props: ButtonProps) {
+  const handleClick = useCallback(() => {
+    // Some logic
+  }, [])
+  
+  const { variant, size, onClick, children } = props  // ← Too late!
+  return <button>{children}</button>
+}
+
+// ❌ WRONG - Mixing destructuring with other statements
+export function useAuth(options: UseAuthOptions = {}) {
+  const [user, setUser] = useState(null)
+  const { redirectUrl } = options  // ← Should be first!
+  // ...
+}
+```
+
+**Why these rules?**
+1. **Readability** - Clear separation between signature and implementation
+2. **Consistency** - Same pattern across all function types
+3. **Maintainability** - Easy to find and modify parameter handling
+4. **Code review** - Quick to understand function signature and usage
+5. **Debugging** - Can log entire `props` or `options` object easily
+
 #### Type Naming Convention
 
 | Function Type | Type Suffix | Example |
@@ -494,15 +632,82 @@ export function useCounter(options: UseCounterOptions = {}) {
 
 #### Why Object Parameters?
 
-Using positional parameters is error-prone and brittle:
+**This is a mandatory rule for function types** - React components, hooks, and utility functions.
+
+> ⚠️ **不适用于 Vue `<script setup>` 组件**：使用 `defineProps()` / `defineEmits()` 宏。**Vue 项目中的 composables 和普通函数仍适用此规则。**
+
+**Never use positional parameters.** Always use a single object parameter with a separately declared type. **The function should have only ONE parameter (the options object), keeping the parameter list singular.**
 
 ```ts
-// ❌ Positional - easy to mix up order, breaks when adding new params
+// ❌ FORBIDDEN - Multiple positional parameters (any function type)
 formatDate(date, 'en', 'YYYY-MM-DD', undefined, true)
-//                                    ↑ must pass undefined to skip optional param
+//             ↑    ↑         ↑           ↑      ↑ multiple parameters!
 
-// ✅ Object - order doesn't matter, safe to extend
-formatDate(date, { locale: 'en', format: 'YYYY-MM-DD', showRelative: true })
+// ✅ REQUIRED - Single object parameter (all function types)
+formatDate({ date, locale: 'en', format: 'YYYY-MM-DD', showRelative: true })
+//          ← ONE object containing all parameters →
+```
+
+**Examples across all function types:**
+
+```ts
+// ✅ CORRECT - Components use object parameters
+interface ButtonProps {
+  variant?: 'primary' | 'secondary'
+  size?: 'sm' | 'md' | 'lg'
+  onClick?: () => void
+  children: React.ReactNode
+}
+
+export function Button(props: ButtonProps) {  // ← Single object parameter
+  const { variant = 'primary', size = 'md', onClick, children } = props
+  return <button onClick={onClick}>{children}</button>
+}
+
+// ✅ CORRECT - Hooks use object parameters
+interface UseAuthOptions {
+  redirectUrl?: string
+  onLogin?: (user: User) => void
+}
+
+export function useAuth(options: UseAuthOptions = {}) {  // ← Single object parameter
+  const { redirectUrl = '/dashboard', onLogin } = options
+  // hook implementation
+}
+
+// ✅ CORRECT - Utility functions use object parameters
+interface FormatDateOptions {
+  date: Date
+  locale?: string
+  format?: string
+  timezone?: string
+}
+
+export function formatDate(options: FormatDateOptions) {  // ← Single object parameter
+  const { date, locale = 'en', format = 'YYYY-MM-DD', timezone } = options
+  // function implementation
+}
+
+// ❌ FORBIDDEN - Components with positional parameters
+export function Button(variant: string, size: string, onClick: () => void) {
+  // Multiple positional parameters are NOT allowed
+}
+
+// ❌ FORBIDDEN - Hooks with positional parameters
+export function useAuth(redirectUrl: string, onLogin: (user: User) => void) {
+  // Multiple positional parameters are NOT allowed
+}
+
+// ❌ FORBIDDEN - Utility functions with positional parameters
+export function formatDate(date: Date, locale: string, format: string, timezone?: string) {
+  // Multiple positional parameters are NOT allowed
+  // Adding a new param forces all callers to update
+}
+
+// ❌ FORBIDDEN - Utility functions with mixed parameters (date + options object)
+export function formatDate(date: Date, options: FormatDateOptions) {
+  // Two parameters are NOT allowed - must be single object only
+}
 ```
 
 Adding a new parameter to a positional function is a **breaking change** for all callers. With object parameters, new optional fields are always backward compatible.
