@@ -29,6 +29,70 @@ pnpm start init -y     # 自动创建 meta.ts 中的所有技能
 pnpm start --help      # 显示帮助
 ```
 
+## 同步技能到 AI 平台
+
+### 方式一：同步所有技能
+
+将所有技能同步到你 AI 编程平台的本地目录：
+
+```bash
+./sync-all-skills.sh
+```
+
+该脚本会自动：
+- ✅ 扫描 `skills/` 目录中的所有技能
+- ✅ 复制 SKILL.md 和参考文档到 `~/.qoder/skills/`
+- ✅ 保留目录结构和所有 Markdown 文件
+- ✅ 提供同步统计和结果
+
+### 方式二：交互式同步（推荐用于更新）
+
+交互式选择要同步的技能：
+
+```bash
+./sync-skill.sh
+```
+
+功能特性：
+- ✅ **交互式选择** - 选择要同步的技能
+- ✅ **多选支持** - 可选择单个、多个或范围技能
+- ✅ **预览模式** - 确认前查看将要同步的内容
+- ✅ **智能替换** - 自动替换已存在的技能
+- ✅ **状态提示** - 显示哪些技能已安装
+
+**输入格式：**
+```
+单个技能:    1
+多个技能:    1,3,5
+范围选择:    1-5
+混合选择:    1,3-5,7
+所有技能:    all
+```
+
+### 跨平台配置
+
+该脚本支持不同的 AI 编程平台。编辑 `sync-all-skills.sh` 的第 6-17 行：
+
+```bash
+# 源目录：你的技能仓库路径
+SKILLS_SOURCE="/Users/neo/Desktop/neo/github/neo-skill/skills"
+
+# 目标目录：你的 AI 平台技能目录
+#   - Qoder:        ~/.qoder/skills
+#   - Cursor:       ~/.cursor/skills
+#   - GitHub Copilot: ~/.github/skills（如果支持）
+#   - 自定义:       /your/custom/path/skills
+SKILLS_TARGET="$HOME/.qoder/skills"
+```
+
+### 何时需要同步
+
+在以下情况下运行同步脚本：
+- 创建或修改任何技能后
+- 更新技能参考文档后
+- 开始新项目之前
+- 从仓库拉取更新后
+
 ## 添加新技能
 
 ### 方法一：使用 CLI

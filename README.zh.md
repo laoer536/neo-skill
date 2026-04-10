@@ -4,6 +4,8 @@
 
 ## 安装
 
+### 方式一：使用 CLI（传统方式）
+
 ```bash
 pnpx skills add neo/skills --skill='*'
 ```
@@ -15,6 +17,23 @@ pnpx skills add neo/skills --skill='*' -g
 ```
 
 了解更多 CLI 使用方法，请访问 [skills](https://github.com/vercel-labs/skills)。
+
+### 方式二：使用同步脚本（推荐用于本地开发）
+
+将所有技能同步到你 AI 编程平台的本地目录：
+
+```bash
+./sync-all-skills.sh
+```
+
+这会将所有技能安装到 `~/.qoder/skills/`（或你配置的平台路径）。
+
+**支持的 AI 平台：**
+- Qoder: `~/.qoder/skills`
+- Cursor: `~/.cursor/skills`
+- 自定义: 编辑 `sync-all-skills.sh` 设置你的目标路径
+
+查看 [AGENTS.zh.md](AGENTS.zh.md) 了解详细配置。
 
 ## 技能概览
 

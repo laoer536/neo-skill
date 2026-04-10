@@ -4,6 +4,8 @@ A curated collection of [Agent Skills](https://agentskills.io/home) reflecting N
 
 ## Installation
 
+### Option 1: Using CLI (Traditional)
+
 ```bash
 pnpx skills add neo/skills --skill='*'
 ```
@@ -15,6 +17,23 @@ pnpx skills add neo/skills --skill='*' -g
 ```
 
 Learn more about CLI usage at [skills](https://github.com/vercel-labs/skills).
+
+### Option 2: Sync Script (Recommended for Local Development)
+
+Sync all skills to your AI platform's local directory:
+
+```bash
+./sync-all-skills.sh
+```
+
+This will install all skills to `~/.qoder/skills/` (or your configured platform path).
+
+**Supported AI Platforms:**
+- Qoder: `~/.qoder/skills`
+- Cursor: `~/.cursor/skills`
+- Custom: Edit `sync-all-skills.sh` to set your target path
+
+See [AGENTS.md](AGENTS.md) for detailed configuration.
 
 ## Skills Overview
 

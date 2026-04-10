@@ -29,6 +29,70 @@ pnpm start init -y     # Auto-create all skills from meta.ts
 pnpm start --help      # Show help
 ```
 
+## Sync Skills to AI Platform
+
+### Option 1: Sync All Skills
+
+Sync all skills to your AI platform's local directory:
+
+```bash
+./sync-all-skills.sh
+```
+
+This script automatically:
+- ✅ Scans all skills in `skills/` directory
+- ✅ Copies SKILL.md and references to `~/.qoder/skills/`
+- ✅ Preserves directory structure and all markdown files
+- ✅ Provides sync statistics and results
+
+### Option 2: Interactive Sync (Recommended for Updates)
+
+Sync selected skills interactively with confirmation:
+
+```bash
+./sync-skill.sh
+```
+
+Features:
+- ✅ **Interactive selection** - Choose which skills to sync
+- ✅ **Multiple selection** - Select single, multiple, or range of skills
+- ✅ **Preview mode** - See what will be synced before confirming
+- ✅ **Smart replace** - Automatically replaces existing skills
+- ✅ **Status indicators** - Shows which skills are already installed
+
+**Input formats:**
+```
+Single skill:  1
+Multiple:      1,3,5
+Range:         1-5
+Mixed:         1,3-5,7
+All skills:    all
+```
+
+### Cross-Platform Configuration
+
+The script supports different AI programming platforms. Edit `sync-all-skills.sh` lines 6-17:
+
+```bash
+# Source: Your skills repository path
+SKILLS_SOURCE="/Users/neo/Desktop/neo/github/neo-skill/skills"
+
+# Target: Your AI platform's skills directory
+#   - Qoder:        ~/.qoder/skills
+#   - Cursor:       ~/.cursor/skills
+#   - GitHub Copilot: ~/.github/skills (if supported)
+#   - Custom:       /your/custom/path/skills
+SKILLS_TARGET="$HOME/.qoder/skills"
+```
+
+### When to Sync
+
+Run the sync script:
+- After creating or modifying any skill
+- After updating skill references
+- Before starting work on a new project
+- After pulling updates from the repository
+
 ## Adding New Skills
 
 ### Method 1: Using CLI
