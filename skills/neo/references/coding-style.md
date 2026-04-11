@@ -160,11 +160,13 @@ import { ref, computed } from 'vue'
 import { useState, useEffect } from 'react'
 import { defineStore } from 'pinia'
 
-// 2. Internal modules (absolute paths)
-import { formatDate } from '@/utils/date'
-import { UserCard } from '@/components'
+// 2. Internal modules (use path aliases when configured)
+import { formatDate } from '@/utils/date'        // ✅ Prefer alias (@/ or ~/
+import { UserCard } from '@/components'          // ✅ Cleaner and more portable
+// ❌ Avoid relative paths for cross-directory imports
+import { helper } from '../../../utils/helper'   // Hard to read and maintain
 
-// 3. Relative imports
+// 3. Relative imports (only for same-directory or sibling files)
 import { helper } from './helper'
 import type { User } from './types'
 
@@ -172,6 +174,35 @@ import type { User } from './types'
 import 'uno.css'
 import './styles.css'
 ```
+
+### Path Alias Preference
+
+**When your project has configured path aliases (e.g., `@/` in tsconfig/vite.config), always prefer aliases over relative paths.**
+
+```ts
+// ✅ CORRECT - Use path alias for cross-directory imports
+import { formatDate } from '@/utils/date'
+import { UserCard } from '@/components/UserCard'
+import { useAuth } from '@/hooks/useAuth'
+import type { User } from '@/types'
+
+// ❌ WRONG - Use relative paths for cross-directory imports
+import { formatDate } from '../../utils/date'
+import { UserCard } from '../components/UserCard'
+import { useAuth } from '../../hooks/useAuth'
+import type { User } from '../../types'
+
+// ✅ ACCEPTABLE - Relative paths for same directory or siblings
+import { helper } from './helper'              // Same directory
+import { types } from '../types'               // Sibling directory
+```
+
+**Why prefer path aliases?**
+1. **Readability** - Clear and consistent import paths regardless of file location
+2. **Maintainability** - No need to recalculate `../` when moving files
+3. **Portability** - Easy to copy/move components without breaking imports
+4. **Cleaner code** - Avoids deeply nested relative paths like `../../../`
+5. **Framework support** - Vite, Next.js, Nuxt all support path aliases out of the box
 
 ### File Structure Pattern
 
