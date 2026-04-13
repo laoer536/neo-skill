@@ -3,7 +3,7 @@ name: neo
 description: Neo's personal coding standards and engineering conventions for JavaScript/TypeScript projects. This is the PUBLIC SKILL that defines my preferences. Covers both Vue and React ecosystems. ALWAYS load this skill for any coding task.
 metadata:
   author: Neo
-  version: "2026.04.10"
+  version: "2026.04.13"
   source: Manual
 ---
 
@@ -182,11 +182,15 @@ This skill set covers **both Vue and React ecosystems**:
 
 ## References
 
-| Topic | Description | Reference |
-|-------|-------------|-----------|
-| Coding Style | File naming, code organization, Vue/React patterns, comments | [coding-style](references/coding-style.md) |
-| Project Structure | Vue/Nuxt, React/Next.js, monorepo organization | [project-structure](references/project-structure.md) |
-| Git Workflow | Branch naming, conventional commits, PR guidelines | [git-workflow](references/git-workflow.md) |
-| Tooling Config | ESLint, TypeScript, Vite, pnpm, Vitest setup | [tooling-config](references/tooling-config.md) |
-| Testing | Unit tests, component testing, mocking, coverage | [testing-guidelines](references/testing-guidelines.md) |
-| Tailwind CSS v4 | Vite/Next.js setup, CSS-first theme, dark mode, conventions | [tailwindcss](references/tailwindcss.md) |
+| Topic | Description | Ecosystem | Priority | Reference |
+|-------|-------------|-----------|----------|-----------|
+| Coding Style | File naming, code organization, Vue/React patterns, comments | Vue + React | P0 | [coding-style](references/coding-style.md) |
+| Project Structure | Vue/Nuxt, React/Next.js, monorepo organization | Vue + React | P1 | [project-structure](references/project-structure.md) |
+| Git Workflow | Branch naming, conventional commits, PR guidelines | Shared | P1 | [git-workflow](references/git-workflow.md) |
+| Tooling Config | ESLint, TypeScript, Vite, pnpm, Vitest setup | Shared | P1 | [tooling-config](references/tooling-config.md) |
+| Testing | Unit tests, component testing, mocking, coverage | Vue + React | P1 | [testing-guidelines](references/testing-guidelines.md) |
+| Tailwind CSS v4 | Vite/Next.js setup, CSS-first theme, dark mode | Vue + React | P2 | [tailwindcss](references/tailwindcss.md) |
+
+> **Priority**: P0 = Always load | P1 = Load when needed | P2 = Optional reference
+> **Ecosystem**: Vue + React = Both ecosystems | Shared = Cross-cutting concerns
+
