@@ -89,16 +89,6 @@ If there are uncommitted changes, the checkout operations below will fail. **Sto
 - Option A: Commit changes — `git add . && git commit -m "WIP: save current work"`
 - Option B: Stash changes — `git stash push -m "worktree-setup-temp"`
 
-**Pull the latest code for the default branch:**
-
-Before creating any worktree, the default branch must be up to date with remote. This ensures worktrees are created from the latest base.
-
-```bash
-git fetch origin <default-branch>:<default-branch>
-```
-
-If the fetch fails due to local divergence, **stop and inform the user** — ask them to resolve the conflict manually before continuing.
-
 If the current branch is NOT the default branch:
 1. The current branch needs its own worktree
 2. The main directory needs to switch to default branch
@@ -119,6 +109,14 @@ git branch -d _worktree_temp
 ```
 
 If the current branch IS the default branch:
+- The default branch must be up to date with remote before creating worktrees from it:
+
+```bash
+git pull origin <default-branch>
+```
+
+If the pull fails due to conflicts, **stop and inform the user** — ask them to resolve manually before continuing.
+
 - No need to create a separate worktree for it
 - Just ensure main directory is on default branch
 - Ask user if they need worktrees for other branches
